@@ -14,6 +14,7 @@
 
 use std::ascii::AsciiExt;
 use std::default::Default;
+use std::fmt;
 
 use tokenizer::{PeekableTokens, Token, Tokens};
 use types::GeometryCollection;
@@ -79,6 +80,23 @@ impl Geometry {
         }
     }
 }
+
+impl fmt::Display for Geometry {
+    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+        let wkt = match self {
+            Geometry::Point(point) => format!("{}", point),
+            Geometry::LineString(linestring) => format!("{}", linestring),
+            Geometry::Polygon(polygon) => format!("{}", polygon),
+            Geometry::MultiPoint(multipoint) => format!("{}", multipoint),
+            Geometry::MultiLineString(multilinstring) => format!("{}", multilinstring),
+            Geometry::MultiPolygon(multipolygon) => format!("{}", multipolygon),
+            Geometry::GeometryCollection(geometrycollection) => format!("{}", geometrycollection),
+        };
+
+        f.write_str(&wkt)
+    }
+}
+
 pub struct Wkt {
     pub items: Vec<Geometry>,
 }

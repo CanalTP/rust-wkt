@@ -12,15 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::fmt;
 use tokenizer::{PeekableTokens, Token};
 use FromTokens;
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct Coord {
     pub x: f64,
     pub y: f64,
     pub z: Option<f64>,
     pub m: Option<f64>,
+}
+
+impl fmt::Display for Coord {
+    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+        let mut strings = format!("{} {}", self.x, self.y);
+        if self.z.is_some() {
+            strings = format!("{} {}", strings, self.z.unwrap());
+        }
+        if self.m.is_some() {
+            strings = format!("{} {}", strings, self.m.unwrap());
+        }
+
+        f.write_str(&strings)
+    }
 }
 
 impl FromTokens for Coord {
@@ -39,5 +54,58 @@ impl FromTokens for Coord {
             z: None,
             m: None,
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Coord;
+
+    #[test]
+    fn write_2d_coord() {
+        let coord = Coord {
+            x: 10.1,
+            y: 20.2,
+            z: None,
+            m: None,
+        };
+
+        assert_eq!("10.1 20.2", format!("{}", coord));
+    }
+
+    #[test]
+    fn write_3d_coord() {
+        let coord = Coord {
+            x: 10.1,
+            y: 20.2,
+            z: Some(-30.3),
+            m: None,
+        };
+
+        assert_eq!("10.1 20.2 -30.3", format!("{}", coord));
+    }
+
+    #[test]
+    fn write_2d_coord_with_linear_referencing_system() {
+        let coord = Coord {
+            x: 10.1,
+            y: 20.2,
+            z: None,
+            m: Some(10.),
+        };
+
+        assert_eq!("10.1 20.2 10", format!("{}", coord));
+    }
+
+    #[test]
+    fn write_3d_coord_with_linear_referencing_system() {
+        let coord = Coord {
+            x: 10.1,
+            y: 20.2,
+            z: Some(-30.3),
+            m: Some(10.),
+        };
+
+        assert_eq!("10.1 20.2 -30.3 10", format!("{}", coord));
     }
 }
