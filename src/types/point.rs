@@ -18,7 +18,7 @@ use types::coord::Coord;
 use FromTokens;
 use Geometry;
 
-#[derive(Default, Clone)]
+#[derive(Default)]
 pub struct Point(pub Option<Coord>);
 
 impl Point {

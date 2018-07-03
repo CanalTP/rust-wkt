@@ -35,10 +35,8 @@ impl fmt::Display for MultiPoint {
             let strings = self
                 .0
                 .iter()
-                .map(|p| {
-                    let coord = p.clone().0.unwrap();
-                    format!("({} {})", coord.x, coord.y)
-                })
+                .filter_map(|p| p.0.as_ref())
+                .map(|c| format!("({} {})", c.x, c.y))
                 .collect::<Vec<_>>()
                 .join(",");
 

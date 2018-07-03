@@ -83,17 +83,15 @@ impl Geometry {
 
 impl fmt::Display for Geometry {
     fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        let wkt = match self {
-            Geometry::Point(point) => format!("{}", point),
-            Geometry::LineString(linestring) => format!("{}", linestring),
-            Geometry::Polygon(polygon) => format!("{}", polygon),
-            Geometry::MultiPoint(multipoint) => format!("{}", multipoint),
-            Geometry::MultiLineString(multilinstring) => format!("{}", multilinstring),
-            Geometry::MultiPolygon(multipolygon) => format!("{}", multipolygon),
-            Geometry::GeometryCollection(geometrycollection) => format!("{}", geometrycollection),
-        };
-
-        f.write_str(&wkt)
+        match self {
+            Geometry::Point(point) => point.fmt(f),
+            Geometry::LineString(linestring) => linestring.fmt(f),
+            Geometry::Polygon(polygon) => polygon.fmt(f),
+            Geometry::MultiPoint(multipoint) => multipoint.fmt(f),
+            Geometry::MultiLineString(multilinstring) => multilinstring.fmt(f),
+            Geometry::MultiPolygon(multipolygon) => multipolygon.fmt(f),
+            Geometry::GeometryCollection(geometrycollection) => geometrycollection.fmt(f),
+        }
     }
 }
 

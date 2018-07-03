@@ -26,15 +26,14 @@ pub struct Coord {
 
 impl fmt::Display for Coord {
     fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        let mut strings = format!("{} {}", self.x, self.y);
-        if self.z.is_some() {
-            strings = format!("{} {}", strings, self.z.unwrap());
+        write!(f, "{} {}", self.x, self.y)?;
+        if let Some(z) = self.z {
+            write!(f, " {}", z)?;
         }
-        if self.m.is_some() {
-            strings = format!("{} {}", strings, self.m.unwrap());
+        if let Some(m) = self.m {
+            write!(f, " {}", m)?;
         }
-
-        f.write_str(&strings)
+        Ok(())
     }
 }
 
